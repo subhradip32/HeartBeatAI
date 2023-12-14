@@ -1,0 +1,277 @@
+{% include 'layout.html' %}
+
+{% block body %}
+
+<script>
+    function InputFunction(name){
+        console.log(name); 
+    } 
+</script>
+
+<div class="blur-bg">
+
+    <h1 style="color: red;">
+        Beat Care
+    </h1>
+    <form method="POST" class="main_form">
+        {% csrf_token %}
+        <div class="elesidebyside">
+            <div>
+                <div class="maincnt">
+                    <label for="survival" class="inputlabel" >
+                        Survival
+                        <span class="ranges">{{ max_min.0}}
+                        </span>
+                    </label><input type="text" name="survival" placeholder="survival">
+                    <label for="still-alive" class="inputlabel">
+                        Still alive 
+                        <span class="ranges">{{ max_min.1  }}</span>
+                    </label><input type="text" name="still-alive" placeholder="still-alive">
+                    <label for="age-at-heart-attack" class="inputlabel">
+                        Age 
+                        <span class="ranges">{{ max_min.2  }}</span>
+                    </label><input type="text" name="age-at-heart-attack" placeholder="age-at-heart-attack">
+                    <label for="pericardial-effusion" class="inputlabel">
+                        Pericardial effusion 
+                        <span class="ranges">{{ max_min.3  }}</span>
+                    </label><input type="text" name="pericardial-effusion" placeholder="pericardial-effusion">
+                    <label for="fractional-shortening" class="inputlabel">
+                        Fractional shortening 
+                        <span class="ranges">{{ max_min.4  }}</span>
+                    </label><input type="text" name="fractional-shortening" placeholder="fractional-shortening">
+                    <label for="epss" class="inputlabel">
+                        Epss 
+                        <span class="ranges">{{ max_min.5  }}</span>
+                    </label><input type="text" name="epss" placeholder="epss">
+                    <label for="lvdd" class="inputlabel">
+                        Lvdd 
+                        <span class="ranges">{{ max_min.6  }}</span>
+                    </label><input type="text" name="lvdd" placeholder="lvdd">
+                    <label for="wall-motion-score" class="inputlabel">
+                        Wall motion score 
+                        <span class="ranges">{{ max_min.7  }}</span>
+                    </label><input type="text" name="wall-motion-score" placeholder="wall-motion-score">
+                    <label for="wall-motion-index" class="inputlabel">
+                        Wall motion index 
+                        <span class="ranges">{{ max_min.8  }}</span>
+                    </label><input type="text" name="wall-motion-index" placeholder="wall-motion-index">
+                    <label for="mult" class="inputlabel">
+                        Mult 
+                        <span class="ranges">{{ max_min.9  }}</span>
+                    </label><input type="text" name="mult" placeholder="mult">
+                </div>
+                <div class="submit_btn">
+                    <button type="submit" onclick="Submit_btn_pressed()">Check</button>
+                </div>
+            </div>
+            <div class="emptyspace">
+                <div class="details" style="height: 80%;">
+                    <p><span>Survival</span><br>The number of months patient survived (has survived,
+                        if patient is still alive).  Because all the patients
+                        had their heart attacks at different times, it is 
+                        possible that some patients have survived less than
+                        one year but they are still alive.  Check the second
+                        variable to confirm this.  Such patients cannot be 
+                        used for the prediction task mentioned above.
+                    </p>
+                    <P><span>Still alive</span><br>
+                        A binary variable.0 means dead at end of survival period,
+		                1 means still alive 
+                    </P>
+                    <p><span>Age at heart attack</span><br>
+                        Age in years when heart attack occurred.
+                    </p>
+                    <p><span>Pericardial effusion</span><br>
+                        Binary Pericardial effusion is fluid
+			      around the heart.0 means no fluid, 1 meansfluid.
+                    </p>
+                    <p><span>Fractional shortening</span><br>
+                        A measure of contracility around the heart
+			       lower numbers are increasingly abnormal.
+                    </p>
+                    <p><span>Epss</span><br>
+                        E-point septal separation, another measure of contractility.  
+	      Larger numbers are increasingly abnormal.
+                    </p>
+                    <p><span>Lvdd</span><br>
+                        left ventricular end-diastolic dimension.  This is
+	      a measure of the size of the heart at end-diastole.
+	      Large hearts tend to be sick hearts.
+                    </p>
+                    <p><span>Wall motion score</span><br>
+                        A measure of how the segments of the left
+			   ventricle are moving.
+                    </p>
+                    <p><span>Wall motion index</span><br>
+                        Equals wall-motion-score divided by number of
+			   segments seen.  Usually 12-13 segments are seen
+			   in an echocardiogram.  Use this variable INSTEAD
+			   of the wall motion score.
+                    </p>
+
+                </div>
+                <h1 style="display: block;justify-content: end;" id="pred" >
+                    {% if predict != None %}
+                        {% if predict == 0 %}
+                            <span style="color: red;font-size: 27px;">You are in high risk</span>
+                        {% else %}
+                             <span style="color: green;font-size: 27px;">You are good to go</span>
+                             {% endif %}
+                    {% endif %}
+                </h1>
+            </div>
+        </div>
+
+    </form>
+</div>
+    
+
+<style>
+        :root{
+            --background_coolor:#fde68a;
+            --foreground_color: white; 
+            --accent_color: #eab308;
+            --accent_color2: #fcd34d;
+            --hover_color:red;
+        }
+        *{
+            font-family: 'Segoe UI',"Tahoma", "Geneva", "Verdana", "sans-serif";
+        }
+        html{
+            height: 100%;
+            width: 100%;
+            background-color:var(--foreground_color);
+            background-repeat: no-repeat;
+            background-color: var(--background_coolor);
+            background-size: contain;
+        }
+        body{
+            margin-left: auto;
+            margin-right: auto;
+            margin: 0px;
+            padding: 0px;
+        }
+        h1{
+            font-size: 60px;
+            text-align: center;
+            text-shadow: 2px 2px 8px var(--accent_color);
+        }
+        .elesidebyside{
+            display:flex;
+            justify-content:center;
+        }.emptyspace{
+            width: 300px;
+            height: 750px;
+            background-color: var(--accent_color2);
+            margin: 10px;
+            border: 1px solid var(--accent_color);
+            border-radius: 15px;
+            box-shadow: 5px 5px 8px var(--accent_color);
+        }
+
+        .details p{
+            
+            font-size: 25px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding-left: 10px;
+            padding-right: 10px;
+            font-weight:600;
+            color: #78350f;
+            text-align: center;
+            border-bottom: 3.5px solid var(--accent_color);
+            margin: 5px;
+        }.details p span{
+            font-size: 25px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align:center;
+            font-weight:bold;
+            color: red;
+            
+            
+        }
+        
+        .maincnt{
+            display: flexbox;
+            width: 700px;
+            height: 700px;
+            overflow-y:scroll ;
+            margin-right: auto;
+            margin-left: auto;
+        }
+        ::-webkit-scrollbar{
+            width: auto;
+        }
+        ::-webkit-scrollbar-track{
+            background-color: var(--accent_color2);
+            border: 1px solid var(--accent_color);
+            border-radius: 10px;
+        }::-webkit-scrollbar-thumb{
+            background-color: var(--accent_color);
+            border: 1px solid var(--accent_color);
+            border-radius: 10px;
+        }
+        .maincnt input{
+            width: 90%;
+            margin: 10px;
+            font-size: 18px;
+            padding: 10px;
+            border:  1.5px solid black;
+            border-radius: 20px;
+            background-color:var(--accent_color2);
+        }.maincnt input:focus,input:active {
+            border: 1.5px solid red;
+            border-radius: 20px;
+        }.maincnt input::placeholder{
+            color: #1e293b;
+        }
+        .submit_btn{
+            width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 10px;
+            display: flexbox;
+        }.submit_btn button{
+            width: 100%;
+            font-size: 15px;
+            font-weight: bold;
+            padding: 15px;
+            border: solid var(--accent_color) 2px;
+            background-color: var(--background_coolor);
+            border-radius: 20px;
+        }.submit_btn button:hover{
+            background-color: var(--hover_color);
+            border: solid  2px var(--hover_color);
+            color: white;
+        }
+        .inputlabel{
+            font-size: 25px;
+            font-weight: bold;
+            color: rgb(131, 0, 0);
+            
+        }
+        .ranges{
+            font-size: 15px;
+            color:#020E54;;
+        }
+        .pred{
+            display: block;
+        }
+        .details{
+            overflow-y: scroll;
+            width: auto;
+            border: solid transparent 1px;
+            border-radius: 15px;
+            margin: 9px;
+            height: 100px;
+            background: rgb(252,211,77);
+            background: linear-gradient(0deg, rgba(252,211,77,1) 0%, rgba(234,179,8,1) 100%);
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+</style>
+
+<script>
+
+</script>
+
+{% endblock %}
